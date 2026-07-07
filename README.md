@@ -1,269 +1,113 @@
+# Book Management System — Backend API
 
-# 📚 Book Management System — MERN Stack
+A REST API built with **Node.js**, **Express**, and **MongoDB (Mongoose)** that powers a full-stack book management application. Supports user authentication, JWT-based authorization, and full CRUD operations on books with pagination and search.
 
-A modern **full-stack MERN learning project** demonstrating how to build a **real-world SaaS-style application** with authentication, CRUD operations, search, pagination, and a responsive dashboard.
-
-This frontend is built using **React + Vite** and communicates with a **secure JWT-based Node.js backend API**.
-
-The project simulates a **production-style SaaS dashboard application**.
+**Live API:** https://mern-server-3tiw.onrender.com
+**Frontend Repo:** [mern-client](https://github.com/nehachinnam956/mern-client)
 
 ---
 
-# 🚀 Tech Stack
+## Features
 
-## Frontend
-- React 18
-- Vite
-- React Router DOM
-- Axios
-- Context API
-- Custom CSS
-
-## Backend (Separate Repository)
-- Node.js
-- Express.js
-- MongoDB
-- JWT Authentication
+- User registration and login with hashed passwords (bcrypt)
+- JWT-based authentication and route protection
+- Role-based structure (user / admin)
+- Full CRUD for books (Create, Read, Update, Delete)
+- Server-side pagination and search (by title or author)
+- MongoDB Atlas cloud database integration
+- Deployed on Render with environment-based configuration
 
 ---
 
-# 🎯 Features
+## Tech Stack
 
-## 🔐 Authentication
-- User Registration
-- User Login
-- JWT Authentication
-- Protected Routes
-- Automatic logout on token expiration
+`Node.js` · `Express.js` · `MongoDB` · `Mongoose` · `JWT` · `bcryptjs` · `dotenv` · `cors`
 
 ---
 
-## 📚 Book Management
-- Create Book
-- Edit Book
-- Delete Book
-- View Books List
-
----
-
-## 🔎 Search
-- Search by **title**
-- Search by **author**
-- Live filtering
-
----
-
-## 📄 Pagination
-- Backend-driven pagination
-- Page navigation
-- Dynamic page buttons
-
----
-
-## 🎯 UX Improvements
-- Loading spinner
-- Login progress bar
-- Success notifications
-- Error handling
-- Disabled buttons during loading
-
----
-
-## 🧭 Interactive Product Tour
-
-First-time users see a guided tour explaining:
-
-1. Add Book  
-2. Edit Book  
-3. Delete Book  
-4. Search Books  
-5. Pagination  
-
-The tour runs **only once using localStorage**.
-
----
-
-## 📱 Responsive UI
-
-Fully responsive design supporting:
-
-- Mobile phones
-- Tablets
-- Laptops
-- Desktop monitors
-- Large screens / projectors
-
----
-
-## 🧑‍💻 Dashboard Layout
-
-A **SaaS-style dashboard UI** including:
-
-- Sidebar navigation
-- Top navbar
-- Main content panel
-
----
-
-# 📂 Project Structure
+## Project Structure
 
 ```
-client/
-│
-├── src/
-│   ├── api/
-│   │   └── axios.js
-│   │
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── Sidebar.jsx
-│   │   └── ProtectedRoute.jsx
-│   │
-│   ├── context/
-│   │   └── AuthContext.jsx
-│   │
-│   ├── pages/
-│   │   ├── Home.jsx
-│   │   ├── Login.jsx
-│   │   ├── Register.jsx
-│   │   └── Books.jsx
-│   │
-│   ├── styles/
-│   │   ├── books.css
-│   │   ├── auth.css
-│   │   ├── navbar.css
-│   │   └── dashboard.css
-│   │
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-│
-├── .env
-├── package.json
-├── vite.config.js
-└── README.md
+├── controllers/
+│   ├── authController.js     # Register & login logic
+│   └── bookController.js     # Book CRUD, pagination, search
+├── middleware/
+│   └── authMiddleware.js     # JWT verification
+├── models/
+│   ├── User.js                # User schema
+│   └── Book.js                 # Book schema
+├── routes/
+│   ├── authRoutes.js
+│   └── bookRoutes.js
+├── seed.js                    # One-time sample data insert
+├── server.js                  # App entry point
+└── package.json
 ```
 
 ---
 
-# 🧠 Architecture Overview
+## API Reference
 
-## Pages
+### Auth
 
-### Home.jsx
-Landing page explaining:
-- Project overview
-- Features
-- Technology stack
+| Method | Endpoint | Description | Protected |
+|---|---|---|---|
+| POST | `/api/auth/register` | Register a new user | No |
+| POST | `/api/auth/login` | Login, returns JWT | No |
 
-### Login.jsx
-Handles:
-- User authentication
-- JWT token storage
-- Redirect to dashboard
-- Login progress indicator
+**Register body**
+```json
+{ "username": "neha", "email": "neha@test.com", "password": "yourpassword" }
+```
 
-### Register.jsx
-Handles:
-- User registration
-- Form validation
-- Redirect to login page
+**Login response**
+```json
+{ "token": "JWT_TOKEN", "user": { "id": "...", "username": "neha", "email": "neha@test.com", "role": "user" } }
+```
 
-### Books.jsx
-Core application page implementing:
-- CRUD operations
-- Search
-- Pagination
-- Onboarding tour
-- Responsive layout
+### Books
+
+| Method | Endpoint | Description | Protected |
+|---|---|---|---|
+| GET | `/api/books?page=1&limit=5&search=gatsby` | List books, paginated & searchable | No |
+| POST | `/api/books` | Create a book | Yes (Bearer token) |
+| PUT | `/api/books/:id` | Update a book | Yes (Bearer token) |
+| DELETE | `/api/books/:id` | Delete a book | Yes (Bearer token) |
 
 ---
 
-# 🔐 Authentication Flow
+## Running Locally
 
-```
-User logs in
-      ↓
-Backend returns JWT
-      ↓
-Token stored in localStorage
-      ↓
-Axios interceptor attaches token
-      ↓
-Protected routes allow access
-      ↓
-Expired token → auto logout
-```
-
----
-
-# 🌐 Environment Variables
-
-Create `.env` in the project root:
-
-```
-VITE_API_BASE_URL=http://localhost:8800/api
-```
-
-⚠️ Never commit `.env` to GitHub.
-
----
-
-# ▶️ Run the Project
-
-### Install dependencies
-
-```
+```bash
 npm install
 ```
 
-### Start development server
-
+Create a `.env` file:
 ```
-npm run dev
+MONGO_URL=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/bookdb
+JWT_SECRET=your_secret_key
+PORT=8800
 ```
 
-Expected output:
-
+Seed sample data (run once only):
+```bash
+node seed.js
 ```
-VITE ready
-Local: http://localhost:5173
+
+Start the server:
+```bash
+npm start
 ```
 
 ---
 
-# 🌍 Live Deployment
+## Deployment
 
-Frontend  
-https://mern-client-lei6-8qh71gxys-nehachinnam956s-projects.vercel.app/
-
-Backend  
-https://mern-server-3tiw.onrender.com/
+Deployed on [Render](https://render.com) as a free web service, connected to a [MongoDB Atlas](https://www.mongodb.com/atlas) cluster with network access open to all IPs (required since Render doesn't use a static IP on the free tier).
 
 ---
 
-# 👨‍💻 Author
+## Author
 
-**Bhagavathi Neha Chinnam**  
-Full Stack Developer  
-
-Tech Interests:
-- React
-- Node.js
-- MongoDB
-- AI
-- Cloud
-
----
-
-# ⭐ Project Goal
-
-This project helps developers learn **real-world MERN development** by building a **complete full-stack application**, rather than following small isolated tutorials.
-
-It demonstrates:
-
-- Authentication systems
-- Dashboard UI architecture
-- API integration
-- State management
-- Production-ready project structure
+**Neha Chinnam**
+[GitHub](https://github.com/nehachinnam956)
