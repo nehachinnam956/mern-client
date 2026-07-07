@@ -244,7 +244,7 @@ https://mern-server-3tiw.onrender.com/
 
 # 👨‍💻 Author
 
-**Nischal Aremanda**  
+**Bhagavathi Neha Chinnam**  
 Full Stack Developer  
 
 Tech Interests:
